@@ -144,7 +144,6 @@ def batchify_list(lst, batch_size=100):
     this_batch_out = []
 
     for index, elt in enumerate(lst):
-        #print(elt)
         this_batch_in.append(elt[0])
         this_batch_out.append(elt[1])
 
@@ -282,7 +281,6 @@ class GradLSTM(ModifiableModule):
         cx = f_t * cx + i_t * g_t
         hx = o_t * tanh(cx)
 
-        #myhook = input_plus_hidden.register_hook(print_grad)
 
         return hx, (hx, cx), o_tpre, input_plus_hidden, i_tpre, f_tpre, g_tpre
 
@@ -425,14 +423,12 @@ class EncoderDecoder(ModifiableModule):
             output, hidden, o_t, iph, i_t, f_t, g_t = self.dec_lstm.forward(emb, hidden)
             hx_new, cx_new = hidden
             
-            #myhook = o_t.register_hook(print_grad)
 
             # Determine the output probabilities used to make predictions
             pred = self.dec_output.forward(output.flatten())
             probs = logsoftmax(pred)
             
             if corr_outp is not None:
-                print(corr_outp, corr_outp[index])
                 computation_graph["logit" + str(index)] = ["logsoftmax", [["pred" + str(index), pred], self.char2ind[corr_outp[index]]]];
                 computation_graph["pred" + str(index)] = ["weightbias", [["dec_h" + str(index), hx_new],["output_weights", self.dec_output.weights],["output_bias", self.dec_output.bias]]];
 
@@ -443,11 +439,8 @@ class EncoderDecoder(ModifiableModule):
                 computation_graph["dec_i" + str(index)] = ["weightbias", [["dec_inputhidden" + str(index), iph],["dec_wi", self.dec_lstm.wi_weights],["dec_bi", self.dec_lstm.wi_bias]]];
                 computation_graph["dec_g" + str(index)] = ["weightbias", [["dec_inputhidden" + str(index), iph],["dec_wg", self.dec_lstm.wg_weights],["dec_bg", self.dec_lstm.wg_bias]]];
             
-            print(cprev_name, hprev_name)
             cprev_name = "dec_c" + str(index);
             hprev_name = "dec_h" + str(index);
-            print(cprev_name, hprev_name)
-            print("")
             
             logits.append(probs)
             preds.append(pred)
@@ -531,8 +524,6 @@ def logsoftmax_grad(args):
     pred = args[1][0][1]
     correct_ind = args[1][1]
 
-    print(name)
-    print(pred)
 
     onehot_vec = onehot(correct_ind)
 
@@ -543,7 +534,6 @@ def logsoftmax_grad(args):
         sm_expand[k] = sm
 
     sm_expand = sm_expand.transpose()
-    print(sm_expand)
 
     mat_grad = sm_expand - np.identity(34)
 
@@ -571,7 +561,6 @@ def weightbias_grad(args, result):
     return [[name_weight, grad_weight], [name_bias, grad_bias], [name_inp, grad_inp]]
 
 def emb_grad(args, result):
-    #print(args)
 
     name_ind = args[0][0]
     ind = args[0][1]
@@ -740,8 +729,6 @@ def backprop_gradient(cg, names, gradients):
         results_new = {}
         this_len = len(results.keys())
         this_result_list = results.keys()
-        print(this_result_list)
-        #print(results)
 
         for name in results.keys():
             grad = results[name];
@@ -753,11 +740,9 @@ def backprop_gradient(cg, names, gradients):
                     gradients[name] = grad;
                 else:
                     gradients[name] = gradients[name] + grad
-                    print(name)
 
 
             else:
-                #print(name)
                 grad_type = cg[name][0]
                 args = cg[name][1]
                 grad_function = function2grad[grad_type]

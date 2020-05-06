@@ -2,16 +2,6 @@
 import numpy as np
 from random import shuffle
 
-function2grad = {};
-function2grad["init"] = init_grad;
-function2grad["logsoftmax"] = logsoftmax_grad;
-function2grad["weightbias"] = weightbias_grad;
-function2grad["emb"] = emb_grad;
-function2grad["tanhsigmoideltwisemul"] = tanhsigmoideltwisemul_grad;
-function2grad["newc"] = newc_grad;
-function2grad["concat"] = concat_grad;
-
-
 # Load a list of abstract language descriptors
 def load_languages(language_file):
     fi = open(language_file, "r")
@@ -678,6 +668,16 @@ def init_grads():
     gradients["emb_mat"] = None
 
     return gradients
+
+
+function2grad = {};
+function2grad["init"] = init_grad;
+function2grad["logsoftmax"] = logsoftmax_grad;
+function2grad["weightbias"] = weightbias_grad;
+function2grad["emb"] = emb_grad;
+function2grad["tanhsigmoideltwisemul"] = tanhsigmoideltwisemul_grad;
+function2grad["newc"] = newc_grad;
+function2grad["concat"] = concat_grad;
 
 
 def update_params(model, lr):

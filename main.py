@@ -520,6 +520,7 @@ def set_params():
     encdec.dec_output.weights = np.loadtxt("dec_output.weights")
     encdec.dec_output.bias = np.loadtxt("dec_output.bias")
 
+    return encdec
 
     
 def init_grad(args, result):
@@ -805,4 +806,24 @@ encdec.dec_output.bias = np.loadtxt("dec_output.bias")
 
 
 gradients = init_grads()
+
+
+
+def train_ex(ex_input, ex_output, model_new):
+    out_string, _, _, _, _, _, _, _, _, _, _, computation_graph = model_new.forward(ex_input,corr_outp=ex_output)
+
+    init_grads()
+
+    to_backprop = []
+    for i in range(len(ex_output) + 1):
+        to_backprop.append("logit" + str(i))
+
+    backprop_gradient(computation_graph, to_backprop[::-1], gradients)
+
+    update_params(model_new,0.01)
+
+    preds = ",".join([to_eos(model_new.forward(pair[0])[0]) + "*" + to_eos(pair[1]) for pair in this_test_set])
+
+
+
 

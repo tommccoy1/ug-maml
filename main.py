@@ -681,7 +681,7 @@ function2grad["newc"] = newc_grad;
 function2grad["concat"] = concat_grad;
 
 
-def update_params(model, lr):
+def update_params(model, lr, gradients):
     model.enc_lstm.wo_weights = model.enc_lstm.wo_weights - lr * gradients["enc_wo"]
     model.enc_lstm.wi_weights = model.enc_lstm.wi_weights - lr * gradients["enc_wi"] 
     model.enc_lstm.wg_weights = model.enc_lstm.wg_weights - lr * gradients["enc_wg"]
@@ -820,7 +820,7 @@ def train_ex(ex_input, ex_output, model_new):
 
     backprop_gradient(computation_graph, to_backprop[::-1], gradients)
 
-    update_params(model_new,0.01)
+    update_params(model_new,0.01, gradients)
 
     preds = ",".join([to_eos(model_new.forward(pair[0])[0]) + "*" + to_eos(pair[1]) for pair in this_test_set])
 

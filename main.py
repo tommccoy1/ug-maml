@@ -825,5 +825,5 @@ def train_ex(ex_input, ex_output, model_new):
     preds = ",".join([to_eos(model_new.forward(pair[0])[0]) + "*" + to_eos(pair[1]) for pair in this_test_set])
 
 
-
+    return preds
 

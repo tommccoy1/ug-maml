@@ -805,11 +805,11 @@ encdec.dec_output.weights = np.loadtxt("dec_output.weights")
 encdec.dec_output.bias = np.loadtxt("dec_output.bias")
 
 
-gradients = init_grads()
 
 
 
 def train_ex(ex_input, ex_output, model_new):
+    gradients = init_grads()
     out_string, _, _, _, _, _, _, _, _, _, _, computation_graph = model_new.forward(ex_input,corr_outp=ex_output)
 
     init_grads()

@@ -804,7 +804,11 @@ encdec.embedding.weights = np.loadtxt("embedding.weights").transpose()
 encdec.dec_output.weights = np.loadtxt("dec_output.weights")
 encdec.dec_output.bias = np.loadtxt("dec_output.bias")
 
-
+def to_eos(string):
+    if "EOS" in string:
+        return string[:string.index("EOS")]
+    else:
+        return string
 
 
 

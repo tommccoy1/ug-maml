@@ -809,6 +809,9 @@ encdec.dec_output.bias = np.loadtxt("dec_output.bias")
 
 
 def train_ex(ex_input, ex_output, model_new):
+    this_test_set = [["rOau",".rO.a.u."], ["axxaO",".a.xa.O."], ["rxxa",".xa."], ["axrxu",".a.xu."], ["ttxaO",".xa.O."], ["Ouuut",".O.u.u.u."], ["rutOu",".ru.tO.u."], ["tOaux",".tO.a.u."], ["xttax",".ta."], ["xuxut",".xu.xu."]]
+
+
     gradients = init_grads()
     out_string, _, _, _, _, _, _, _, _, _, _, computation_graph = model_new.forward(ex_input,corr_outp=ex_output)
 
@@ -822,8 +825,7 @@ def train_ex(ex_input, ex_output, model_new):
 
     update_params(model_new,0.01, gradients)
 
-    preds = ",".join([to_eos(model_new.forward(pair[0])[0]) + "*" + to_eos(pair[1]) for pair in this_test_set])
-
+    preds = [[to_eos(model_new.forward(pair[0])[0]),to_eos(pair[1])] for pair in this_test_set]
 
     return preds
 
